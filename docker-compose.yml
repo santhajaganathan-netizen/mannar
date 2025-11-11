@@ -2,9 +2,9 @@ services:
 
   # 1. PostgreSQL Database Container
   db:
-    image: medusa-db:latest
+    image: medusa-db-img:latest
     build:
-      context: ./docker-data/database
+      context: ./docker-data/postgres
       dockerfile: Dockerfile.postgres
     container_name: medusa_postgres
     restart: unless-stopped
@@ -23,8 +23,8 @@ services:
   medusa:
     image: medusa-backend-img:latest
     build:
-      context: ./docker-data/backend
-      dockerfile: Dockerfile.medusa
+      context: .
+      dockerfile: ./docker-data/backend/Dockerfile.medusa
     container_name: medusa_backend
     restart: unless-stopped
     env_file:
@@ -42,3 +42,6 @@ services:
     depends_on:
       - db
     command: [ "npx", "medusa", "start" ]
+
+volumes:
+  postgres_data:
