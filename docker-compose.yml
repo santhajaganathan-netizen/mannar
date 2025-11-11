@@ -1,10 +1,9 @@
-version: '3.8'
-
 services:
 
   # 1. PostgreSQL Database Container 
   db:
     # Dockerfile.postgres remains in the root directory
+    image: medusa-db-img:latest
     build:
       context: .
       dockerfile: docker-data/postgres/Dockerfile.postgres
