@@ -13,8 +13,7 @@ SERVICE=$1
 # Supported services
 if [ "$SERVICE" = "postgres" ]; then
     echo "🔧 Running '$SERVICE' Docker image..."
-#    docker run -d --name medusa-db mannar-db
-     docker run -d --name medusa-db -e POSTGRES_USER=medusa_root -e POSTGRES_PASSWORD=supersecretpassword -e POSTGRES_DB=medusa -p 5432:5432 -v pgdata:/docker_data/postgresql/data mannar-db
+     docker run -d --name medusa-db --env-file .env -p 5432:5432 -v pgdata:/docker_data/postgresql/data medusa-db
     echo "✅ Build complete: mannar-db"
 else
     echo "❌ Error: Service '$SERVICE' is not supported."
