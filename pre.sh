@@ -12,7 +12,7 @@ BACKEND_REPO="https://github.com/medusajs/medusa-starter-default.git"
 STOREFRONT_REPO="https://github.com/medusajs/nextjs-starter-medusa.git"
 
 # Required environment variables
-REQUIRED_VARS=("POSTGRES_USER" "POSTGRES_PASSWORD" "POSTGRES_DB")
+REQUIRED_VARS=("POSTGRES_USER" "POSTGRES_PASSWORD" "POSTGRES_DB" "JWT_SECRET" "COOKIE_SECRET")
 
 # Function to check for .env file
 check_env_file() {

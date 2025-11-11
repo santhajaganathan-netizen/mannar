@@ -1,11 +1,21 @@
-FROM node:20-slim
+FROM node:20
 
+# Set working directory
 WORKDIR /app
 
-COPY package*.json ./
+# Install git (needed to clone the repo)
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
+# Copy Medusa project files into the container
+COPY github/medusa-starter-default/ ./
+
+
+# Install dependencies
+RUN npm set progress=true && npm install @swc/core --legacy-peer-deps
 RUN npm install
 
-COPY . .
-
+# Expose Medusa backend port
 EXPOSE 9000
-CMD ["npm", "run", "start"]
+
+# Start Medusa in development mode
+CMD ["npx", "medusa", "develop"]

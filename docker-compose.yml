@@ -1,25 +1,47 @@
 services:
 
-  # 1. PostgreSQL Database Container 
+  # 1. PostgreSQL Database Container
   db:
-    # Dockerfile.postgres remains in the root directory
     image: medusa-db-img:latest
     build:
-      context: .
-      dockerfile: docker-data/postgres/Dockerfile.postgres
+      context: ./docker-data/postgres
+      dockerfile: Dockerfile.postgres
     container_name: medusa_postgres
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
     volumes:
-      # Named volume for persistent database storage
-      - postgres_data:/docker-data/postgresql/data
+      - postgres_data:${POSTGRES_DATA}
     ports:
-      # Optional: Only expose if you need direct external access to the DB
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
 
-# Define named volume for persistent database storage
+  # 2. Medusa Backend/Admin Container
+  medusa:
+    image: medusa-backend-img:latest
+    build:
+      context: .
+      dockerfile: ./docker-data/backend/Dockerfile.medusa
+    container_name: medusa_backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${MEDUSA_PORT}:9000"
+    environment:
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}
+      MEDUSA_ADMIN_URL: http://localhost:7000
+      MEDUSA_URL: http://localhost:9000
+      NODE_ENV: production
+      CORS_ORIGIN: http://localhost:8000,http://localhost:7000
+      JWT_SECRET: ${JWT_SECRET}
+      COOKIE_SECRET: ${COOKIE_SECRET}
+    depends_on:
+      - db
+    command: [ "npx", "medusa", "start" ]
+
 volumes:
   postgres_data:
