@@ -1,0 +1,16 @@
+# Dockerfile.postgres
+# Base image for PostgreSQL
+FROM postgres:16
+
+# Set a persistent location for configuration file changes (optional)
+# VOLUME /etc/postgresql/
+VOLUME /docker-data/postgresql/data/
+
+# You could add steps here to install extensions (e.g., PostGIS) 
+# or copy custom configuration files (postgresql.conf) if needed.
+
+# Example: Run a script to install a common extension if it wasn't a standard image
+RUN apt-get update && apt-get install -y postgresql-contrib
+
+# The default entrypoint and command from the base image are usually sufficient
+CMD ["postgres"]

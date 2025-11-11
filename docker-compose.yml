@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+
+  # 1. PostgreSQL Database Container 
+  db:
+    # Dockerfile.postgres remains in the root directory
+    build:
+      context: .
+      dockerfile: docker-data/postgres/Dockerfile.postgres
+    container_name: medusa_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: medusa_root
+      POSTGRES_PASSWORD: supersecretpassword # <-- CHANGE THIS SECURELY
+      POSTGRES_DB: medusa
+    volumes:
+      # Named volume for persistent database storage
+      - postgres_data:/docker-data/postgresql/data
+    ports:
+      # Optional: Only expose if you need direct external access to the DB
+      - "5432:5432"
+
+# Define named volume for persistent database storage
+volumes:
+  postgres_data:
