@@ -10,6 +10,17 @@ fi
 
 SERVICE=$1
 
+# 'source' (or '.') reads the file and executes it in the current shell.
+# This makes variables like POSTGRES_PORT available for shell expansion.
+if [ -f .env ]; then
+    echo "Loading environment variables from .env"
+    # The variables in .env must be in the format 'VAR=value'
+    source .env
+else
+    echo "Error: .env file not found!"
+    exit 1
+fi
+
 # Supported services
 if [ "$SERVICE" = "postgres" ]; then
     echo "🔧 Running '$SERVICE' Docker image..."
