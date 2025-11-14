@@ -18,6 +18,11 @@ services:
       - postgres_data:${POSTGRES_DATA}
     ports:
       - "${POSTGRES_PORT}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   # 2. Medusa Backend/Admin Container
   medusa:
@@ -32,7 +37,7 @@ services:
     ports:
       - "${MEDUSA_PORT}:9000"
     environment:
-      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:${POSTGRES_PORT}/${POSTGRES_DB}
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
       MEDUSA_ADMIN_URL: http://localhost:7000
       MEDUSA_URL: http://localhost:9000
       NODE_ENV: production
@@ -40,7 +45,8 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       COOKIE_SECRET: ${COOKIE_SECRET}
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     command: [ "npx", "medusa", "start" ]
 
 volumes:
