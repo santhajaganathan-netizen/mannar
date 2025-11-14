@@ -13,4 +13,4 @@ VOLUME /docker-data/postgresql/data/
 RUN apt-get update && apt-get install -y postgresql-contrib
 
 # The default entrypoint and command from the base image are usually sufficient
-CMD ["postgres"]
+CMD ["postgres","-c","ssl=off"]
