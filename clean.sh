@@ -1,9 +1,9 @@
-dop container stop medusa-store
-dop container rm medusa-store
-dop container stop medusa-backend
-dop container rm medusa-backend
-dop container stop medusa-db
-dop container rm medusa-db
-docker rmi medusa-store-img
-docker rmi medusa-backend-img
-docker rmi medusa-db-img
+docker container stop medusa-storefront || true
+docker container rm medusa-storefront || true
+docker container stop medusa-backend || true
+docker container rm medusa-backend || true
+docker container stop medusa-db || true
+docker container rm medusa-db || true
+docker rmi medusa-storefront-img || true
+docker rmi medusa-backend-img || true
+docker rmi medusa-db-img || true
