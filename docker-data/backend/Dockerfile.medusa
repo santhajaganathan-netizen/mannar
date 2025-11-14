@@ -11,6 +11,11 @@ COPY github/medusa-starter-default/ ./
 
 
 # Install dependencies
+# Install PostgreSQL client tools for debugging
+RUN apt-get update && \
+    apt-get install -y postgresql-client && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN npm set progress=true && npm install @swc/core --legacy-peer-deps
 RUN npm install
 
