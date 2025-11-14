@@ -85,7 +85,8 @@ clone_from_github() {
 # --- Main Execution ---
 if [ $# -ne 1 ]; then
     echo "Usage: $0 <service>"
-    echo "Example: $0 postgres"
+    echo "Example: $0 backend"
+    echo "Note: the argument is currently informational; both backend and storefront repos are prepared."
     exit 1
 fi
 
