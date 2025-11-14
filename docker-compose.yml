@@ -1,3 +1,5 @@
+version: "3.9"
+
 services:
 
   # 1. PostgreSQL Database Container
@@ -23,6 +25,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    networks:
+      - medusa_net
 
   # 2. Medusa Backend/Admin Container
   medusa:
@@ -48,6 +52,29 @@ services:
       db:
         condition: service_healthy
     command: [ "npx", "medusa", "start" ]
+    networks:
+      - medusa_net
+
+  # 3. Next.js Storefront Container
+  storefront:
+    image: medusa-storefront-img:latest
+    build:
+      context: ./docker-data/storefront
+      dockerfile: Dockerfile.storefront
+    container_name: medusa_storefront
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      - medusa
+    networks:
+      - medusa_net
 
 volumes:
   postgres_data:
+
+networks:
+  medusa_net:
+    driver: bridge
